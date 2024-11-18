@@ -1,5 +1,6 @@
 ﻿# P1_Mercancias_perecederas
 1. Objetivos principales
+===
   -	Minimizar coste total: Optimizar las rutas de entrega para reducir el coste total, teniendo en cuenta tanto el coste por kilómetro de cada vehículo como el uso eficiente de la capacidad de carga y la autonomía.
   -	Maximizar el número de pedidos entregados: Planificar las rutas para entregar el mayor número de pedidos posible dentro de las limitaciones de los recursos disponibles (vehículos, capacidad de carga, autonomía, etc.), maximizando la eficiencia operativa.
 2. Restricciones
