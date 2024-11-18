@@ -9,7 +9,7 @@
   operación.
 - Considera que el vehículo puede necesitar retornar a su punto de inicio, por lo que la autonomía se debe planificar de forma adecuada.
 - Todas las rutas empiezan y acaban en el almacén
-- 
+
 3.	Datos 
 - Tabla flota vehículos  df_vehicle
 -	Tabla localizaciones (almacén y clientes)  df_location
