@@ -1,1 +1,0 @@
-- Predicciones de demanda de clientes para enero de 2025

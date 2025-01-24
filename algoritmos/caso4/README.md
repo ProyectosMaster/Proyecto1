@@ -1,0 +1,1 @@
+- Algoritmo genético de optimización de rutas en el que se garantiza la entrega de los productos en menos de una hora desde que el vehículo sale del almacén
