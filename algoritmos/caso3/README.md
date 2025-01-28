@@ -1,0 +1,1 @@
+Algoritmo genético de optimización de rutas con las demandas obtenidas de la predicción del 01-2025
