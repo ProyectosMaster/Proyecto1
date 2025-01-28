@@ -585,7 +585,8 @@ def crossover(parent1, parent2):
         c for c in parent2_flat if c not in parent1_flat[:cut]
     ]
     child = split_routes(child_flat)
-    if fitness_function(child) == float("inf"):  # Verificar si la nueva ruta es válida
+    # Verificar si la nueva ruta es válida
+    if fitness_function(child) == float("inf"):
         return parent1  # Conservar el padre si el hijo no es válido
     return child
 
@@ -596,7 +597,8 @@ def mutate(routes):
     flat_list = [client for route in routes for client in route]
     random.shuffle(flat_list)
     mutated = split_routes(flat_list)
-    if fitness_function(mutated) == float("inf"):  # Verificar si la mutación es válida
+    # Verificar si la mutación es válida
+    if fitness_function(mutated) == float("inf"):
         return routes  # Conservar la ruta original si la mutada no es válida
     return mutated
 
@@ -636,7 +638,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=20):
         poblacion = generate_initial_population()
 
         for generation in range(NUM_GENERATIONS):
-            fitnesses = np.array([1 / (1 + fitness_function(ind)) for ind in poblacion])
+            fitnesses = np.array([1 / (1 + fitness_function(ind))
+                                 for ind in poblacion])
             nueva_poblacion = []
             for _ in range(POPULATION_SIZE):
                 padre1, padre2 = select_parents(poblacion, fitnesses)
@@ -662,7 +665,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=20):
             for i, route in enumerate(mejor_solucion_global):
                 ruta = ""
                 vehicle = vehiculos[i % len(vehiculos)]
-                distancia, demanda_total, coste, id_vehiculo = info_ruta(route, vehicle)
+                distancia, demanda_total, coste, id_vehiculo = info_ruta(
+                    route, vehicle)
                 coste_total += coste
 
                 ruta += "Almacén"
@@ -690,13 +694,15 @@ def genetic_algorithm_multiple_runs(ejecuciones=20):
         print(f"  Ruta: {datos['ruta']}")
         print(f"  Distancia: {datos['distancia']}km")
         print(
-            f"  Demanda total: {datos['demanda_total']}/{capacidad_maxima_vehiculo}kg"
+            f"  Demanda total: {datos['demanda_total']
+                                }/{capacidad_maxima_vehiculo}kg"
         )
         print(f"  Coste: {datos['coste']}€")
 
     print("-----------------------------------------------------------")
     print(f"Distancia total recorrida: {mejor_distancia_global}")
     print(f"Coste total de la ruta: {coste_total}")
+    return info_mejor_ruta
 
 
 # Ejecutar el algoritmo genético múltiples veces
