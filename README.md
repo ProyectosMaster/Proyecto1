@@ -19,30 +19,31 @@
   -	Histórico de pedidos   df_historic_order_demand
 
 4. Estructura de carpetas
+   
   - Profiling:
-      -Readme.md
-      -df_distance_km.html
-      -df_distance_min.html
-      -df_historic_order_demand.html
-      -df_location.html
-      -df_orders.html
-      -df_vehicle.html
+      - Readme.md
+      - df_distance_km.html
+      - df_distance_min.html
+      - df_historic_order_demand.html
+      - df_location.html
+      - df_orders.html
+      - df_vehicle.html
     
   - Datos/raw_data:
-      -prediccion:
+      - prediccion:
            - Readme.md
            - pedidos_2025.csv
-      -df_distance_km.xlsx
-      -df_distance_min.xlsx
-      -df_historic_order_demand.xlsx
-      -df_location.xlsx
-      -df_orders.xlsx
-      -df_vehicle.xlsx
+      - df_distance_km.xlsx
+      - df_distance_min.xlsx
+      - df_historic_order_demand.xlsx
+      - df_location.xlsx
+      - df_orders.xlsx
+      - df_vehicle.xlsx
     
   - Documentacion:
       - Business_understanding.docx
 
-  -Modelos:
+  - Modelos:
       - algorimto_djikstra.ipynb
       - algoritmoGenetico.py
       - algoritmoGenetico_caso1_bucle.py
@@ -51,10 +52,10 @@
       - algoritmo_ortools.py
       - algoritmo_programacion_lineal.py
 
-  -Script: 
+  - Script: 
       - predicciones_enero2025_bueno.ipynb
 
-  -README.md
+  - README.md
 
 
 
