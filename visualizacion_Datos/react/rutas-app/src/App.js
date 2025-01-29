@@ -1,57 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import "./App.css";
+import BotonGenerar from "./components/BotonGenerar";
+import Seccion1 from "./components/Seccion1";
+import Seccion2 from "./components/Seccion2";
+import "./styles.css";
 
 function App() {
-  const [rutas, setRutas] = useState([]);
+  const [datos, setDatos] = useState(null); // Estado para almacenar los datos de la API
 
-  useEffect(() => {
-    // Fetch de datos desde la API
-    axios
-      .get("http://127.0.0.1:5000/api/rutas")
-      .then((response) => {
-        setRutas(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al obtener las rutas:", error);
-      });
-  }, []);
+  // Función para obtener los datos de la API
+  const generarDatos = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/rutas");
+      setDatos(response.data); // Almacenar los datos en el estado
+    } catch (error) {
+      console.error("Error al obtener las rutas:", error);
+    }
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Resultados de las Rutas</h1>
-      </header>
-      <main>
-        {rutas.map((ruta, index) => (
-          <div key={index} className="ruta-container">
-            <h2>Ruta {index + 1}</h2>
-            <ul>
-              <li>
-                <strong>Ruta:</strong> {ruta.ruta}
-              </li>
-              <li>
-                <strong>Distancia:</strong> {ruta.distancia}
-              </li>
-              <li>
-                <strong>Demanda Total:</strong> {ruta.demanda_total}
-              </li>
-              <li>
-                <strong>Coste:</strong> {ruta.coste}
-              </li>
-              <li>
-                <strong>ID Vehículo:</strong> {ruta.id_vehiculo}
-              </li>
-            </ul>
-            <p>
-              <strong>Costes totales:</strong> {ruta.coste_total}
-            </p>
-            <p>
-              <strong>Distancia total:</strong> {ruta.distancia_total}
-            </p>
-          </div>
-        ))}
-      </main>
+    <div>
+      <h1>Aplicación de Rutas</h1>
+      <BotonGenerar onGenerarDatos={generarDatos} />
+      {datos && ( // Mostrar las secciones solo si hay datos
+        <>
+          <Seccion1 datos={datos} />
+          <Seccion2 datos={datos} />
+        </>
+      )}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import random
+import os
+import time
 
 # Configuración de parámetros
 NUM_GENERATIONS = 700
@@ -8,9 +10,16 @@ POPULATION_SIZE = 200
 MUTATION_RATE = 0.1
 CROSSOVER_RATE = 0.9
 
+# Configuración de rutas
+base_dir = os.path.dirname(os.path.abspath(__file__))
+distancias_path = os.path.join(base_dir, '..', '..', 'datos',
+                               'raw_data', 'df_distance_km.xlsx')
+demandas_path = os.path.join(base_dir, '..', '..', 'datos',
+                             'raw_data', 'df_historic_order_demand.xlsx')
+
 # Matriz de distancias (datos iniciales reales)
-df_distancias = pd.read_excel("../datos/raw_data/df_distance_km.xlsx")
-df_demandas = pd.read_excel("../datos/raw_data/df_historic_order_demand.xlsx")
+df_distancias = pd.read_excel(distancias_path)
+df_demandas = pd.read_excel(demandas_path)
 df_demandas["order_demand"] = df_demandas["order_demand"].fillna(0)
 
 matriz_distancias = df_distancias.values.tolist()
@@ -102,7 +111,8 @@ def crossover(parent1, parent2):
         c for c in parent2_flat if c not in parent1_flat[:cut]
     ]
     child = split_routes(child_flat)
-    if fitness_function(child) == float("inf"):  # Verificar si la nueva ruta es válida
+    # Verificar si la nueva ruta es válida
+    if fitness_function(child) == float("inf"):
         return parent1  # Conservar el padre si el hijo no es válido
     return child
 
@@ -113,7 +123,8 @@ def mutate(routes):
     flat_list = [client for route in routes for client in route]
     random.shuffle(flat_list)
     mutated = split_routes(flat_list)
-    if fitness_function(mutated) == float("inf"):  # Verificar si la mutación es válida
+    # Verificar si la mutación es válida
+    if fitness_function(mutated) == float("inf"):
         return routes  # Conservar la ruta original si la mutada no es válida
     return mutated
 
@@ -152,12 +163,14 @@ def genetic_algorithm_multiple_runs(ejecuciones=5):
     mejor_distancia_global = float("inf")
     info_mejor_ruta = None
 
+    start_time = time.time()
     for ejecucion in range(ejecuciones):
         print(f"Ejecutando iteración {ejecucion + 1}/{ejecuciones}...")
         poblacion = generate_initial_population()
 
         for generation in range(NUM_GENERATIONS):
-            fitnesses = np.array([1 / (1 + fitness_function(ind)) for ind in poblacion])
+            fitnesses = np.array([1 / (1 + fitness_function(ind))
+                                 for ind in poblacion])
             nueva_poblacion = []
             for _ in range(POPULATION_SIZE):
                 padre1, padre2 = select_parents(poblacion, fitnesses)
@@ -183,7 +196,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=5):
             for i, route in enumerate(mejor_solucion_global):
                 ruta = ""
                 vehicle = vehiculos[i % len(vehiculos)]
-                distancia, demanda_total, coste, id_vehiculo = info_ruta(route, vehicle)
+                distancia, demanda_total, coste, id_vehiculo = info_ruta(
+                    route, vehicle)
                 coste_total += coste
 
                 ruta += "Almacén"
@@ -200,6 +214,7 @@ def genetic_algorithm_multiple_runs(ejecuciones=5):
                         "id_vehiculo": id_vehiculo,
                     }
                 )
+    end_time = time.time()
 
     # Imprimir resultados finales
     print("\nMejor solución encontrada:")
@@ -211,7 +226,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=5):
         print(f"  Ruta: {datos['ruta']}")
         print(f"  Distancia recorrida: {datos['distancia']} km")
         print(
-            f"  Demanda total: {datos['demanda_total']}/{capacidad_maxima_vehiculo}kg"
+            f"  Demanda total: {datos['demanda_total']
+                                }/{capacidad_maxima_vehiculo}kg"
         )
         print(f"  Coste: {datos['coste']}€")
 
@@ -219,9 +235,14 @@ def genetic_algorithm_multiple_runs(ejecuciones=5):
     mejor_distancia_global = round(mejor_distancia_global, 2)
     coste_total = round(coste_total, 2)
     print(
-        f"Distancia total recorrida: {str(mejor_distancia_global).replace(".",",")} km"
+        f"Distancia total recorrida: {
+            str(mejor_distancia_global).replace(".", ",")} km"
     )
-    print(f"Coste total de la ruta: {str(coste_total).replace(".",",")}€")
+    print(f"Coste total de la ruta: {str(coste_total).replace(".", ",")}€")
+    print(f"\n\nTiempo de ejecucion ({ejecuciones} iteraciones):",
+          f"{(end_time-start_time):.2f} s")
+
+    return info_mejor_ruta
 
 
 # Ejecutar el algoritmo genético múltiples veces
