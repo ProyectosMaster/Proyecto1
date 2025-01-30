@@ -4,7 +4,7 @@ function Seccion1({ datos }) {
   if (!datos) return null; // No mostrar nada si no hay datos
 
   return (
-    <div style={styles.contenedor}>
+    <div>
       <h2 style={styles.titulo}>Resultados de las Rutas Generadas</h2>
       {datos.map((ruta, index) => (
         <div key={index} className="ruta-container">
@@ -14,24 +14,32 @@ function Seccion1({ datos }) {
               <strong>Ruta:</strong> {ruta.ruta}
             </li>
             <li>
-              <strong>Distancia:</strong> {ruta.distancia}
+              <strong>Distancia:</strong>{" "}
+              {parseFloat(ruta.distancia).toFixed(2)} km
             </li>
             <li>
-              <strong>Demanda Total:</strong> {ruta.demanda_total}
+              <strong>Demanda Total:</strong>{" "}
+              {parseFloat(ruta.demanda_total).toFixed(2)} kg
             </li>
             <li>
-              <strong>Coste:</strong> {ruta.coste}
+              <strong>Coste:</strong> {parseFloat(ruta.coste).toFixed(2)} €
             </li>
             <li>
               <strong>ID Vehículo:</strong> {ruta.id_vehiculo}
+              <ul>
+                <li>
+                  Autonomia: {parseFloat(ruta.capacidad_vehiculo).toFixed(2)} km
+                </li>
+                <li>
+                  Capacidad: {parseFloat(ruta.autonomia_vehiculo).toFixed(2)} kg
+                </li>
+                <li>
+                  Costo por km: {parseFloat(ruta.costo_km_vehiculo).toFixed(2)}{" "}
+                  €
+                </li>
+              </ul>
             </li>
           </ul>
-          {/* <p>
-            <strong>Costes totales:</strong> {ruta.coste_total}
-          </p>
-          <p>
-            <strong>Distancia total:</strong> {ruta.distancia_total}
-          </p> */}
         </div>
       ))}
     </div>
@@ -40,13 +48,6 @@ function Seccion1({ datos }) {
 
 // Estilos concretos
 const styles = {
-  contenedor: {
-    padding: "20px",
-    border: "1px solid #eee",
-    borderRadius: "10px",
-    backgroundColor: "#fafafa",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-  },
   titulo: {
     textAlign: "center", // Centrar el título
     color: "#007bff", // Color azul para el título

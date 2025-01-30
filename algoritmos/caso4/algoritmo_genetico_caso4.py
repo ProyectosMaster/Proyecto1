@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import random
+import time
 
 # Configuración de parámetros
 NUM_GENERATIONS = 700
@@ -149,11 +150,16 @@ def select_parents(population, fitnesses):
 
 
 def info_ruta(ruta, vehiculo):
+    """
+    Calcula la información de una ruta específica.
+    :param ruta: Lista de clientes en la ruta.
+    :param vehiculo: Diccionario con la información del vehículo.
+    :return: Tupla con (distancia_tiempo, distancia_km, demanda_total, coste, id_vehiculo, capacidad, costo_km, autonomia)
+    """
     distancia_tiempo = 0
     distancia_km = 0
     almacen = 20  # Comienza en el almacén
     demanda_total = 0
-    id_vehiculo = 0
 
     for cliente in ruta:
         distancia_tiempo += matriz_distancias_min[almacen][cliente]
@@ -163,21 +169,19 @@ def info_ruta(ruta, vehiculo):
 
     # Regresa al almacén
     distancia_tiempo += matriz_distancias_min[almacen][20]
-    distancia_km += matriz_distancias_km[almacen][20]  # Regresa al almacén
+    distancia_km += matriz_distancias_km[almacen][20]
     coste = distancia_km * vehiculo["costo_km"]
-    id_vehiculo = vehiculo["id"]
 
     return (
         round(distancia_tiempo),
         round(distancia_km, 2),
         demanda_total,
         round(coste, 2),
-        id_vehiculo,
+        vehiculo["id"],
+        vehiculo["capacidad"],
+        vehiculo["costo_km"],
+        vehiculo["autonomia"],
     )
-
-
-"""Al ser aleatorio el algoritmo genético, no me asegura que a la primera me encuentre un buena ruta por lo que
-lo ejecuto 'x' veces y me quedo con el mejor resultado"""
 
 
 def genetic_algorithm_multiple_runs(ejecuciones=2):
@@ -187,6 +191,7 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
 
     for ejecucion in range(ejecuciones):
         print(f"Ejecutando iteración {ejecucion + 1}/{ejecuciones}...")
+        start_time = time.time()
         poblacion = generate_initial_population()
 
         for generation in range(NUM_GENERATIONS):
@@ -205,40 +210,54 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
         mejor_solucion = poblacion[mejor_indice]
         distancia_actual = fitness_function(mejor_solucion)
 
-        # Si es la mejor solución encontrada hasta ahora, guárdala (MIRAR NOMBRES)
+        end_time = time.time()
+
+        # Si es la mejor solución encontrada hasta ahora, guárdala
         if distancia_actual < mejor_distancia_global:
             mejor_distancia_global = distancia_actual
             mejor_solucion_global = mejor_solucion
 
             # Generar detalles de las rutas
             info_mejor_ruta = []
-
             coste_total = 0
             distancia_total = 0
+
             for i, route in enumerate(mejor_solucion_global):
-                ruta = ""
                 vehicle = vehiculos[i % len(vehiculos)]
-                distancia_min, distancia_km, demanda_total, coste, id_vehiculo = (
-                    info_ruta(route, vehicle)
-                )
+                (
+                    distancia_min,
+                    distancia_km,
+                    demanda_total,
+                    coste,
+                    id_vehiculo,
+                    capacidad,
+                    costo_km,
+                    autonomia,
+                ) = info_ruta(route, vehicle)
+
                 coste_total += coste
                 distancia_total += distancia_km
 
-                ruta += "Almacén"
+                ruta_str = "Almacén"
                 for client in route:
-                    ruta += f" -> Cliente {client+1}"
-                ruta += " -> Almacén"
+                    ruta_str += f" -> Cliente {client + 1}"
+                ruta_str += " -> Almacén"
 
                 info_mejor_ruta.append(
                     {
-                        "ruta": ruta,
+                        "ruta": ruta_str,
                         "distancia_min": distancia_min,
                         "distancia_km": str(distancia_km).replace(".", ","),
+                        "distancia": distancia_km,
                         "demanda_total": demanda_total,
-                        "coste": str(coste).replace(".", ","),
+                        "coste": coste,
                         "id_vehiculo": id_vehiculo,
+                        "capacidad_vehiculo": capacidad,
+                        "costo_km_vehiculo": costo_km,
+                        "autonomia_vehiculo": autonomia,
                         "coste_total": coste_total,
-                        "distancia_total": mejor_distancia_global
+                        "distancia_total": mejor_distancia_global,
+                        "tiempo_ejecucion": (end_time - start_time),
                     }
                 )
 
@@ -246,18 +265,15 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
     print("\nMejor solución encontrada:")
 
     for datos in info_mejor_ruta:
-        capacidad_maxima_vehiculo = [
-            v["capacidad"] for v in vehiculos if v["id"] == datos["id_vehiculo"]
-        ]
         print(f"Vehículo {datos['id_vehiculo']}:")
         print(f"  Ruta: {datos['ruta']}")
         print(f"  Duración: {datos['distancia_min']} min")
         print(f"  Distancia recorrida: {datos['distancia_km']} km")
-        print(
-            f"  Demanda total: {datos['demanda_total']
-                                }/{capacidad_maxima_vehiculo}kg"
-        )
-        print(f"  Coste: {datos['coste']}€")
+        print(f"  Demanda total: {
+              datos['demanda_total']}/{datos['capacidad_vehiculo']} kg")
+        print(f"  Coste: {datos['coste']} €")
+        print(f"  Costo por kilómetro: {datos['costo_km_vehiculo']} €/km")
+        print(f"  Autonomía del vehículo: {datos['autonomia_vehiculo']} km")
 
     print("-----------------------------------------------------------")
     distancia_total = round(distancia_total, 2)
@@ -265,15 +281,9 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
     horas = mejor_distancia_global // 60
     minutos = mejor_distancia_global % 60
     print(f"Distancia total recorrida: {
-          str(distancia_total).replace(".", ",")} km")
-    print(
-        f"Tiempo total de todas las rutas: {int(horas)} horas y {round(
-            minutos) if minutos > 10 else round(minutos)} minutos"
-    )
-    print(f"Coste total de la ruta: {str(coste_total).replace(".", ",")}€")
+          str(distancia_total).replace('.', ',')} km")
+    print(f"Tiempo total de todas las rutas: {
+          int(horas)} horas y {round(minutos)} minutos")
+    print(f"Coste total de la ruta: {str(coste_total).replace('.', ',')} €")
 
     return info_mejor_ruta
-
-
-# Ejecutar el algoritmo genético múltiples veces
-genetic_algorithm_multiple_runs()
