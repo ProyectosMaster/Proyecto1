@@ -1,11 +1,7 @@
 import React from "react";
 
-function BotonGenerar({ onGenerarDatos }) {
-  return (
-    <div>
-      <button onClick={onGenerarDatos}>Generar Datos</button>
-    </div>
-  );
-}
+const BotonGenerar = ({ onGenerarDatos }) => {
+  return <button onClick={onGenerarDatos}>Generar Datos</button>;
+};
 
 export default BotonGenerar;

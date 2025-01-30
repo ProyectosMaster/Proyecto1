@@ -6,33 +6,65 @@ from flask_cors import CORS
 # Obtener la ruta base del directorio actual (donde está server.py)
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Construir la ruta a la carpeta que contiene el módulo
-ruta_algoritmos = os.path.join(base_dir, '..', 'algoritmos', 'caso1')
-
-# Agregar la ruta al sys.path
-sys.path.append(ruta_algoritmos)
-
-# Función para retrasar el import
-
-
-def cargar_algoritmo():
-    from algoritmo_genetico_caso1 import genetic_algorithm_multiple_runs
-    return genetic_algorithm_multiple_runs()
-
+# Agregar las rutas de los algoritmos a sys.path
+for i in range(1, 5):
+    caso = f"caso{i}"
+    ruta_algoritmos = os.path.join(base_dir, '..', 'algoritmos', caso)
+    sys.path.append(ruta_algoritmos)
 
 # Inicializar la aplicación Flask
 app = Flask(__name__)
 CORS(app)  # Habilitar CORS para todas las rutas
 
+
+# Funciones para cargar los algoritmos
+def cargar_caso1():
+    from algoritmo_genetico_caso1 import genetic_algorithm_multiple_runs
+    return genetic_algorithm_multiple_runs()
+
+
+def cargar_caso2():
+    from algoritmo_genetico_caso2 import genetic_algorithm_multiple_runs
+    return genetic_algorithm_multiple_runs()
+
+
+def cargar_caso3():
+    from algoritmo_genetico_caso3 import genetic_algorithm_multiple_runs
+    return genetic_algorithm_multiple_runs()
+
+
+def cargar_caso4():
+    from algoritmo_genetico_caso4 import genetic_algorithm_multiple_runs
+    return genetic_algorithm_multiple_runs()
+
+
 # Ejecutar el algoritmo genético y almacenar los resultados
-ruta = cargar_algoritmo()
+caso1 = cargar_caso1()
+caso2 = cargar_caso2()
+caso3 = cargar_caso3()
+caso4 = cargar_caso4()
 
 # Ruta API para obtener los datos en formato JSON
 
 
-@app.route('/api/rutas', methods=['GET'])
-def obtener_rutas():
-    return jsonify(ruta)
+@app.route('/api/caso1', methods=['GET'])
+def obtener_caso1():
+    return jsonify(caso1)
+
+
+@app.route('/api/caso2', methods=['GET'])
+def obtener_caso2():
+    return jsonify(caso2)
+
+
+@app.route('/api/caso3', methods=['GET'])
+def obtener_caso3():
+    return jsonify(caso3)
+
+
+@app.route('/api/caso4', methods=['GET'])
+def obtener_caso4():
+    return jsonify(caso4)
 
 
 # Ejecutar la aplicación Flask

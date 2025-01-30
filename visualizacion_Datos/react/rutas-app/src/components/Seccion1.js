@@ -4,8 +4,8 @@ function Seccion1({ datos }) {
   if (!datos) return null; // No mostrar nada si no hay datos
 
   return (
-    <div>
-      <h2>Sección 1: Resultados de las Rutas</h2>
+    <div style={styles.contenedor}>
+      <h2 style={styles.titulo}>Resultados de las Rutas Generadas</h2>
       {datos.map((ruta, index) => (
         <div key={index} className="ruta-container">
           <h3>Ruta {index + 1}</h3>
@@ -26,16 +26,32 @@ function Seccion1({ datos }) {
               <strong>ID Vehículo:</strong> {ruta.id_vehiculo}
             </li>
           </ul>
-          <p>
+          {/* <p>
             <strong>Costes totales:</strong> {ruta.coste_total}
           </p>
           <p>
             <strong>Distancia total:</strong> {ruta.distancia_total}
-          </p>
+          </p> */}
         </div>
       ))}
     </div>
   );
 }
+
+// Estilos concretos
+const styles = {
+  contenedor: {
+    padding: "20px",
+    border: "1px solid #eee",
+    borderRadius: "10px",
+    backgroundColor: "#fafafa",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+  titulo: {
+    textAlign: "center", // Centrar el título
+    color: "#007bff", // Color azul para el título
+    marginBottom: "15px", // Espacio debajo del título
+  },
+};
 
 export default Seccion1;

@@ -212,6 +212,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=5):
                         "demanda_total": demanda_total,
                         "coste": str(coste).replace(".", ","),
                         "id_vehiculo": id_vehiculo,
+                        "coste_total": coste_total,
+                        "distancia_total": mejor_distancia_global
                     }
                 )
     end_time = time.time()

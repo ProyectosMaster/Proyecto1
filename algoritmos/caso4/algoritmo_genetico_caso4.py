@@ -123,7 +123,8 @@ def crossover(parent1, parent2):
         c for c in parent2_flat if c not in parent1_flat[:cut]
     ]
     child = split_routes(child_flat)
-    if fitness_function(child) == float("inf"):  # Verificar si la nueva ruta es válida
+    # Verificar si la nueva ruta es válida
+    if fitness_function(child) == float("inf"):
         return parent1  # Conservar el padre si el hijo no es válido
     return child
 
@@ -134,7 +135,8 @@ def mutate(routes):
     flat_list = [client for route in routes for client in route]
     random.shuffle(flat_list)
     mutated = split_routes(flat_list)
-    if fitness_function(mutated) == float("inf"):  # Verificar si la mutación es válida
+    # Verificar si la mutación es válida
+    if fitness_function(mutated) == float("inf"):
         return routes  # Conservar la ruta original si la mutada no es válida
     return mutated
 
@@ -159,7 +161,8 @@ def info_ruta(ruta, vehiculo):
         demanda_total += demands[cliente]
         almacen = cliente
 
-    distancia_tiempo += matriz_distancias_min[almacen][20]  # Regresa al almacén
+    # Regresa al almacén
+    distancia_tiempo += matriz_distancias_min[almacen][20]
     distancia_km += matriz_distancias_km[almacen][20]  # Regresa al almacén
     coste = distancia_km * vehiculo["costo_km"]
     id_vehiculo = vehiculo["id"]
@@ -187,7 +190,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
         poblacion = generate_initial_population()
 
         for generation in range(NUM_GENERATIONS):
-            fitnesses = np.array([1 / (1 + fitness_function(ind)) for ind in poblacion])
+            fitnesses = np.array([1 / (1 + fitness_function(ind))
+                                 for ind in poblacion])
             nueva_poblacion = []
             for _ in range(POPULATION_SIZE):
                 padre1, padre2 = select_parents(poblacion, fitnesses)
@@ -233,6 +237,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
                         "demanda_total": demanda_total,
                         "coste": str(coste).replace(".", ","),
                         "id_vehiculo": id_vehiculo,
+                        "coste_total": coste_total,
+                        "distancia_total": mejor_distancia_global
                     }
                 )
 
@@ -248,7 +254,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
         print(f"  Duración: {datos['distancia_min']} min")
         print(f"  Distancia recorrida: {datos['distancia_km']} km")
         print(
-            f"  Demanda total: {datos['demanda_total']}/{capacidad_maxima_vehiculo}kg"
+            f"  Demanda total: {datos['demanda_total']
+                                }/{capacidad_maxima_vehiculo}kg"
         )
         print(f"  Coste: {datos['coste']}€")
 
@@ -257,11 +264,15 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
     coste_total = round(coste_total, 2)
     horas = mejor_distancia_global // 60
     minutos = mejor_distancia_global % 60
-    print(f"Distancia total recorrida: {str(distancia_total).replace(".",",")} km")
+    print(f"Distancia total recorrida: {
+          str(distancia_total).replace(".", ",")} km")
     print(
-        f"Tiempo total de todas las rutas: {int(horas)} horas y {round(minutos) if minutos > 10 else round(minutos)} minutos"
+        f"Tiempo total de todas las rutas: {int(horas)} horas y {round(
+            minutos) if minutos > 10 else round(minutos)} minutos"
     )
-    print(f"Coste total de la ruta: {str(coste_total).replace(".",",")}€")
+    print(f"Coste total de la ruta: {str(coste_total).replace(".", ",")}€")
+
+    return info_mejor_ruta
 
 
 # Ejecutar el algoritmo genético múltiples veces
