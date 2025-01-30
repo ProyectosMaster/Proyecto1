@@ -17,3 +17,50 @@
   -	Matriz distancias entre localizaciones en tiempo  df_distance_min
   -	Tabla de pedidos  df_orders
   -	Histórico de pedidos   df_historic_order_demand
+
+4. Estructura de carpetas
+   
+  - Profiling:
+      - Readme.md
+      - df_distance_km.html
+      - df_distance_min.html
+      - df_historic_order_demand.html
+      - df_location.html
+      - df_orders.html
+      - df_vehicle.html
+    
+  - Datos/raw_data:
+      - prediccion:
+           - Readme.md
+           - pedidos_2025.csv
+      - df_distance_km.xlsx
+      - df_distance_min.xlsx
+      - df_historic_order_demand.xlsx
+      - df_location.xlsx
+      - df_orders.xlsx
+      - df_vehicle.xlsx
+    
+  - Documentacion:
+      - Business_understanding.docx
+
+  - Modelos:
+      - algorimto_djikstra.ipynb
+      - algoritmoGenetico.py
+      - algoritmoGenetico_caso1_bucle.py
+      - algoritmoGenetico_caso2_bucle.py 
+      - algoritmoGenetico_caso3.py
+      - algoritmo_ortools.py
+      - algoritmo_programacion_lineal.py
+
+  - Script: 
+      - predicciones_enero2025_bueno.ipynb
+
+  - README.md
+
+
+
+
+    
+
+    
+
