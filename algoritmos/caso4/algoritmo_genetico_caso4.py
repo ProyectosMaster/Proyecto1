@@ -39,6 +39,7 @@ vehiculos = [
 # Ordenar los vehículos por costo por kilómetro (menor a mayor)
 vehiculos = sorted(vehiculos, key=lambda v: v["costo_km"])
 vehicle_capacities = [v["capacidad"] for v in vehiculos]
+vehicle_autonomies = [v["autonomia"] for v in vehiculos]
 
 # Número de vehículos
 num_vehicles = len(vehicle_capacities)

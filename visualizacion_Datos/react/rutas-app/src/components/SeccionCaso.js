@@ -3,6 +3,7 @@ import axios from "axios";
 import BotonGenerar from "./BotonGenerar";
 import Seccion1 from "./Seccion1";
 import Seccion2 from "./Seccion2";
+import CsvTable from "./predicciones_2025"; // Importar el componente CsvTable
 
 const SeccionCaso = ({ caso }) => {
   const [datos, setDatos] = useState(null); // Estado para almacenar los datos de la API
@@ -23,6 +24,7 @@ const SeccionCaso = ({ caso }) => {
     <div className="ruta-container">
       <h2 style={styles.titulo}>{caso.toUpperCase()}</h2>{" "}
       {/* Título de la sección */}
+      {caso === "caso3" ? <CsvTable /> : <></>}
       <BotonGenerar onGenerarDatos={generarDatos} />{" "}
       {/* Botón para generar datos */}
       {mostrarDatos &&
@@ -46,6 +48,9 @@ const styles = {
     textAlign: "center", // Centrar el título
     color: "#007bff", // Color azul para el título
     marginBottom: "15px", // Espacio debajo del título
+  },
+  tabla: {
+    flex: 1,
   },
 };
 

@@ -21,6 +21,11 @@ function Seccion2({ datos }) {
         <p>
           Tiempo de ruta: {horas.toFixed(0)} h {minutos.toFixed(0)} min
         </p>
+        <p>
+          Tiempo de ejecucion:{" "}
+          {parseFloat(datos[datos.length - 1]["tiempo_ejecucion"]).toFixed(2)} s
+          por iteración
+        </p>
       </div>
     </div>
   );
