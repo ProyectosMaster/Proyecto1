@@ -47,18 +47,25 @@ num_vehicles = len(vehicle_capacities)
 
 def fitness_function(routes):
     total_distance = 0
-    for route in routes:
+    for i, route in enumerate(routes):
         if len(route) == 0:
             continue
         distance = 0
+        distance_km = 0
         prev_location = 20  # Comienza en el almacén
         for client in route:
             if matriz_distancias_min[prev_location][client] == 0:
                 # Penalizar si no hay camino entre dos clientes
                 return float("inf")  # Penalización
             distance += matriz_distancias_min[prev_location][client]
+            distance_km += matriz_distancias_km[prev_location][client]
             prev_location = client
         distance += matriz_distancias_min[prev_location][20]
+        distance_km += matriz_distancias_km[prev_location][20]
+
+        if distance_km > vehicle_autonomies[i % num_vehicles]:
+            return float("inf")
+
         total_distance += distance
     return total_distance
 
@@ -81,10 +88,15 @@ def split_routes(clients):
     current_route = []
     current_capacity = 0
     current_duration = 0
+    current_distance = 0
     vehicle_index = 0
+    prev_location = 20  # Almacén
 
     for client in clients:
         demand = demands[client]
+        distance_to_client = matriz_distancias_km[prev_location][client]
+        distance_return = matriz_distancias_km[client][20]
+
         duration_to_client = (
             matriz_distancias_min[20][client]
             if not current_route
@@ -96,16 +108,22 @@ def split_routes(clients):
         if (
             current_capacity + demand <= vehicle_capacities[vehicle_index]
             and current_duration + duration_to_client + duration_return_to_depot <= 60
+            and current_distance + distance_to_client + distance_return
+            <= vehicle_autonomies[vehicle_index]
         ):
             current_route.append(client)
             current_capacity += demand
             current_duration += duration_to_client
+            current_distance += distance_to_client
+            prev_location = client
         else:
             # Finalizar la ruta actual y comenzar una nueva
             routes.append(current_route)
             current_route = [client]
             current_capacity = demand
             current_duration = matriz_distancias_min[20][client]
+            current_distance = matriz_distancias_km[20][client]
+            prev_location = client
             vehicle_index = (vehicle_index + 1) % num_vehicles
 
     if current_route:
