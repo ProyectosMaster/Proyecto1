@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 import time
+import os
 
 # Configuración de parámetros
 NUM_GENERATIONS = 700
@@ -10,9 +11,21 @@ MUTATION_RATE = 0.1
 CROSSOVER_RATE = 0.9
 
 # Matriz de distancias (datos iniciales reales)
-df_distancias_min = pd.read_excel("../datos/raw_data/df_distance_min.xlsx")
-df_distancias_km = pd.read_excel("../datos/raw_data/df_distance_km.xlsx")
-df_demandas = pd.read_excel("../datos/raw_data/df_historic_order_demand.xlsx")
+base_dir = os.path.dirname(os.path.abspath(__file__))
+distancias_min_path = os.path.join(
+    base_dir, "..", "..", "datos", "raw_data", "df_distance_min.xlsx"
+)
+distancias_km_path = os.path.join(
+    base_dir, "..", "..", "datos", "raw_data", "df_distance_km.xlsx"
+)
+demandas_path = os.path.join(
+    base_dir, "..", "..", "datos", "raw_data", "df_historic_order_demand.xlsx"
+)
+
+df_distancias_min = pd.read_excel(distancias_min_path)
+df_distancias_km = pd.read_excel(distancias_km_path)
+df_demandas = pd.read_excel(demandas_path)
+
 
 matriz_distancias_min = []
 matriz_distancias_km = []
@@ -46,6 +59,12 @@ num_vehicles = len(vehicle_capacities)
 
 
 def fitness_function(routes):
+    """
+    Evalua que tan buena es la solución midiendo el tiempo total del conjunto de rutas.
+    Penaliza soluciones invalidas si:
+    - La distancia entre clientes es 0
+    - La ruta excede la autonomía del vehiculo
+    """
     total_distance = 0
     for i, route in enumerate(routes):
         if len(route) == 0:
@@ -71,8 +90,11 @@ def fitness_function(routes):
 
 
 def generate_initial_population():
+    """
+    Genera una población de soluciones aleatorias mezclando los clientes con demanda y dividiendo
+    las rutas.
+    """
     population = []
-    clients = list(range(0, 20))
     for _ in range(POPULATION_SIZE):
         random.shuffle(clientes_con_demanda)
         route = split_routes(clientes_con_demanda)
@@ -84,6 +106,13 @@ def generate_initial_population():
 
 
 def split_routes(clients):
+    """
+    Divide una lista de clientes en rutas viables teniendo en cuenta:
+    - Capacidad y autonomía del vehículo
+    - Empezar y finalizar las rutas en el almacén
+    - Que la ruta no supere los 60 minutos de recorrido
+    - Pasa al siguiente vehículo si supera alguna restricción
+    """
     routes = []
     current_route = []
     current_capacity = 0
@@ -133,6 +162,11 @@ def split_routes(clients):
 
 
 def crossover(parent1, parent2):
+    """
+    Cruza dos rutas para generar un hijo:
+    - Selecciona una parte de un padre y la junta con las partes del otro padre que no coincidan.
+    - Verifica que sea valida y si no, se mantiene la del primer padre.
+    """
     if random.random() > CROSSOVER_RATE:
         return parent1
     parent1_flat = [client for route in parent1 for client in route]
@@ -150,6 +184,11 @@ def crossover(parent1, parent2):
 
 
 def mutate(routes):
+    """
+    Realiza una mutación aleatoria a una solución:
+    - Mezcla los clientes de dicha solución y vuelve a generar una ruta con esa mezcla.
+    - Se comprueba que sea válida.
+    """
     if random.random() > MUTATION_RATE:
         return routes
     flat_list = [client for route in routes for client in route]
@@ -162,6 +201,9 @@ def mutate(routes):
 
 
 def select_parents(population, fitnesses):
+    """
+    Selecciona dos soluciones mediante el metodo de la ruleta para utilizarlas en la funcion crossover
+    """
     idx = np.random.choice(
         len(population), size=2, replace=False, p=fitnesses / np.sum(fitnesses)
     )
@@ -203,7 +245,11 @@ def info_ruta(ruta, vehiculo):
     )
 
 
-def genetic_algorithm_multiple_runs(ejecuciones=2):
+def genetic_algorithm_multiple_runs(ejecuciones=5):
+    """
+    Llama a todas las funciones anteriores y por cada ejecución se queda con la mejor solución(mejor fitness)
+    y compara con la anterior solución para quedarse con el que menor tiempo total recorra.
+    """
     mejor_solucion_global = None
     mejor_distancia_global = float("inf")
     info_mejor_ruta = None
@@ -214,8 +260,7 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
         poblacion = generate_initial_population()
 
         for generation in range(NUM_GENERATIONS):
-            fitnesses = np.array([1 / (1 + fitness_function(ind))
-                                 for ind in poblacion])
+            fitnesses = np.array([1 / (1 + fitness_function(ind)) for ind in poblacion])
             nueva_poblacion = []
             for _ in range(POPULATION_SIZE):
                 padre1, padre2 = select_parents(poblacion, fitnesses)
@@ -288,8 +333,10 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
         print(f"  Ruta: {datos['ruta']}")
         print(f"  Duración: {datos['distancia_min']} min")
         print(f"  Distancia recorrida: {datos['distancia_km']} km")
-        print(f"  Demanda total: {
-              datos['demanda_total']}/{datos['capacidad_vehiculo']} kg")
+        print(
+            f"  Demanda total: {
+              datos['demanda_total']}/{datos['capacidad_vehiculo']} kg"
+        )
         print(f"  Coste: {datos['coste']} €")
         print(f"  Costo por kilómetro: {datos['costo_km_vehiculo']} €/km")
         print(f"  Autonomía del vehículo: {datos['autonomia_vehiculo']} km")
@@ -299,10 +346,18 @@ def genetic_algorithm_multiple_runs(ejecuciones=2):
     coste_total = round(coste_total, 2)
     horas = mejor_distancia_global // 60
     minutos = mejor_distancia_global % 60
-    print(f"Distancia total recorrida: {
-          str(distancia_total).replace('.', ',')} km")
-    print(f"Tiempo total de todas las rutas: {
-          int(horas)} horas y {round(minutos)} minutos")
+    print(
+        f"Distancia total recorrida: {
+          str(distancia_total).replace('.', ',')} km"
+    )
+    print(
+        f"Tiempo total de todas las rutas: {
+          int(horas)} horas y {round(minutos)} minutos"
+    )
     print(f"Coste total de la ruta: {str(coste_total).replace('.', ',')} €")
 
     return info_mejor_ruta
+
+
+# Ejecutar el algoritmo genético múltiples veces
+genetic_algorithm_multiple_runs()
