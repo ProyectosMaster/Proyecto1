@@ -29,31 +29,92 @@
       - df_orders.html
       - df_vehicle.html
     
-  - Datos/raw_data:
-      - prediccion:
-           - Readme.md
-           - pedidos_2025.csv
-      - df_distance_km.xlsx
-      - df_distance_min.xlsx
-      - df_historic_order_demand.xlsx
-      - df_location.xlsx
-      - df_orders.xlsx
-      - df_vehicle.xlsx
+  - Algoritmos:
+      - algoritmos_iniciales:
+           - algoritmo_djikstra.ipynb
+           - algoritmoGenetico_caso1.py
+           - algoritmoGenetico_caso2.py
+           - algoritmo_pulp.ipynb
+           - notebook_proyecto.ipynb
+           - prueba_bucle.py
+      - caso 1:
+           - __pycache_:
+               - algoritmo_genetico_caso1.cpython-312.pyc
+           - README.md
+           - algoritmo_genetico_caso1.py
+      - caso 2:
+           - __pycache_:
+               - algoritmo_genetico_caso2.cpython-312.pyc
+           - README.md
+           - algoritmo_genetico_caso2.py
+      - caso 3:
+           - __pycache_:
+               - algoritmo_genetico_caso3.cpython-312.pyc
+           - README.md
+           - algoritmo_genetico_caso3.py
+      - caso 4:
+           - __pycache_:
+               - algoritmo_genetico_caso4.cpython-312.pyc
+           - README.md
+           - algoritmo_genetico_caso4.py
+      - README.md
     
+  - Datos:
+      - map:
+          - mapa.html
+          - mapas.ipynb
+      - prediccion:
+          - pedidos_2025.csv
+      - raw_data:
+          - df_distance_km.xlsx
+          - df_distance_min.xlsx
+          - df_historic_order_demand.xlsx
+          - df_location.xlsx
+          - df_orders.xlsx
+          - df_vehicle.xlsx
+
   - Documentacion:
-      - Business_understanding.docx
+      - Documentacion.docx
 
   - Modelos:
-      - algorimto_djikstra.ipynb
-      - algoritmoGenetico.py
-      - algoritmoGenetico_caso1_bucle.py
-      - algoritmoGenetico_caso2_bucle.py 
-      - algoritmoGenetico_caso3.py
-      - algoritmo_ortools.py
-      - algoritmo_programacion_lineal.py
+      - README.md
+      - predicciones_enero2025.ipynb
 
-  - Script: 
-      - predicciones_enero2025_bueno.ipynb
+  - Visualizacion_Datos: 
+      - __pycache_:
+        - algoritmoGenetico_caso1_bucle.cpython-312.pyc
+      - react:
+          - rutas-app:
+            - __pycache_:
+                - algoritmoGenetico_caso1_bucle.cpython-312.pyc
+            - public:
+                - favicon.ico
+                - index.html
+                - logo192.png
+                - logo512.png
+                - manifest.json
+                - mapa.html
+                - pedidos_2025.csv
+                - robots.txt
+            - src:
+                - components:
+                    - Articulo1.js
+                    - BotonGenerar.js
+                    - CsvTable.css
+                    - MapComponent.js
+                    - Seccion1.js
+                    - Seccion2.js
+                    - SeccionCaso.js
+                    - predicciones_2025.js
+                - App.js
+                - index.js
+                - logo.svg
+                - styles.css
+            - .gitignore
+            - README.md
+            - package-lock.json
+            - package.json
+      - server.py
 
   - README.md
 
