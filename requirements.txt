@@ -1,0 +1,13 @@
+# requirements.txt
+numpy==1.26.4
+pandas==2.2.3
+scikit-learn==1.5.2
+seaborn==0.13.2
+matplotlib==3.8.3
+folium==0.18.0
+ortools==9.11.4210
+PuLP==2.9.0
+networkx==3.4.2
+Flask==3.0.3
+Flask-CORS==5.0.0
+axios==0.4.0

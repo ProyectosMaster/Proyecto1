@@ -1,1 +1,1 @@
-
+- Análisis descriptivo de cada fichero contenido en la carpeta datos/raw_data.
