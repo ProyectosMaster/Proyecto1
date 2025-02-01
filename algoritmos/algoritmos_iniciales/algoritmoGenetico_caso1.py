@@ -603,7 +603,8 @@ def crossover(parent1, parent2):
         c for c in parent2_flat if c not in parent1_flat[:cut]
     ]
     child = split_routes(child_flat)
-    if fitness_function(child) == float("inf"):  # Verificar si la nueva ruta es válida
+    # Verificar si la nueva ruta es válida
+    if fitness_function(child) == float("inf"):
         return parent1  # Conservar el padre si el hijo no es válido
     return child
 
@@ -614,7 +615,8 @@ def mutate(routes):
     flat_list = [client for route in routes for client in route]
     random.shuffle(flat_list)
     mutated = split_routes(flat_list)
-    if fitness_function(mutated) == float("inf"):  # Verificar si la mutación es válida
+    # Verificar si la mutación es válida
+    if fitness_function(mutated) == float("inf"):
         return routes  # Conservar la ruta original si la mutada no es válida
     return mutated
 
@@ -647,7 +649,8 @@ def info_ruta(route, vehicle):
 def genetic_algorithm():
     population = generate_initial_population()
     for generation in range(NUM_GENERATIONS):
-        fitnesses = np.array([1 / (1 + fitness_function(ind)) for ind in population])
+        fitnesses = np.array([1 / (1 + fitness_function(ind))
+                             for ind in population])
         new_population = []
         for _ in range(POPULATION_SIZE):
             parent1, parent2 = select_parents(population, fitnesses)
@@ -671,7 +674,8 @@ def main():
 
     for i, route in enumerate(best_solution, start=1):
         vehicle = vehiculos[(i - 1) % len(vehiculos)]
-        route_distance, route_demand, route_cost, id = info_ruta(route, vehicle)
+        route_distance, route_demand, route_cost, id = info_ruta(
+            route, vehicle)
 
         total_distance += route_distance
         total_cost += route_cost

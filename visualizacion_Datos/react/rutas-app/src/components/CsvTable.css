@@ -1,0 +1,41 @@
+/* Contenedor de la tabla */
+.table-container {
+  width: 50%; /* Ocupar el 100% del ancho disponible */
+  margin: 20px auto; /* Centrar horizontalmente */
+  text-align: center; /* Centrar el contenido interno */
+}
+
+/* Estilos para la tabla */
+.table {
+  width: 100%; /* La tabla ocupa el 100% del contenedor */
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 1em;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para los encabezados de la tabla */
+.table th {
+  background-color: #007bff;
+  color: #ffffff;
+  text-align: center;
+  padding: 12px 15px;
+}
+
+/* Estilos para las celdas de la tabla */
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dddddd;
+  text-align: center;
+}
+
+/* Estilos para las filas pares */
+.table tr:nth-child(even) {
+  background-color: #f3f3f3;
+}
+
+/* Estilos para el hover en las filas */
+.table tr:hover {
+  background-color: #f1f1f1;
+}

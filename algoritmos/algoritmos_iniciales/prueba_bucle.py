@@ -648,7 +648,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=20):
         poblacion = generate_initial_population()
 
         for generation in range(NUM_GENERATIONS):
-            fitnesses = np.array([1 / (1 + fitness_function(ind)) for ind in poblacion])
+            fitnesses = np.array([1 / (1 + fitness_function(ind))
+                                 for ind in poblacion])
             nueva_poblacion = []
             for _ in range(POPULATION_SIZE):
                 padre1, padre2 = select_parents(poblacion, fitnesses)
@@ -674,7 +675,8 @@ def genetic_algorithm_multiple_runs(ejecuciones=20):
             for i, route in enumerate(mejor_solucion_global):
                 ruta = ""
                 vehicle = vehiculos[i % len(vehiculos)]
-                distancia, demanda_total, coste, id_vehiculo = info_ruta(route, vehicle)
+                distancia, demanda_total, coste, id_vehiculo = info_ruta(
+                    route, vehicle)
                 coste_total += coste
 
                 ruta += "Almacén"
