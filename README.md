@@ -85,7 +85,7 @@
   - README.md
   - predicciones_enero2025.ipynb
 
-  - video_web:
+- video_web:
 
   - README.md
   - video_prototipo.mkv
